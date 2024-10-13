@@ -20,9 +20,63 @@ namespace Failsafe
     /// </summary>
     public partial class MainWindow : Window
     {
+        private Switch switch_;
+        /// <summary>
+        /// инициализация
+        /// </summary>
         public MainWindow()
         {
             InitializeComponent();
+            switch_ = new Switch();
+        }
+        /// <summary>
+        /// Обработчик для кнопки
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            TxtBox.Text = "";
+            // отключение генератора
+            try
+            {
+                switch_.DisconnectPowerGenerator();
+            }
+            catch (Exception ex)
+            {
+                TxtBox.Text += $"Ошибка связи с генератором: {ex}\n";
+            }
+            // проверка основнйо системы охлаждения
+            try
+            {
+                switch_.VerifyBackupCoolantSystem();
+            }
+            catch (CoolantTemperatureReadException ex)
+            {
+                TxtBox.Text += $"Ошибка чтения температуры: {ex}\n";
+            }
+            catch (CoolantPressureReadException ex) 
+            {
+                TxtBox.Text += $"Ошибка чтения давления: {ex}\n";
+            }
+            // Втавка управляющих стержней
+            try
+            {
+                switch_.InsertRodCluster();
+            }
+            catch (RodClusterReleaseException ex)
+            {
+                TxtBox.Text += $"Ошибка освобождения стержней: {ex}\n";
+            }
+            // Завершенение отключение
+            try
+            {
+                switch_.SignalShutdownComplete();
+            }
+            catch (Exception ex)
+            {
+                TxtBox.Text += $"Ошибка завершающего сигнала: {ex}\n";
+            }
         }
     }
 }
