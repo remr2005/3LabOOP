@@ -13,7 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using static UIHandler;
-using static Matrix.Matrix;
+using static MMatrix;
 
 namespace Matrix
 {
@@ -34,12 +34,9 @@ namespace Matrix
             try
             {
                 double[,] a = new double[Row1.SelectedIndex + 1, Column1.SelectedIndex + 1];
-                double[,] b = new double[Column1.SelectedIndex + 1, Column2.SelectedIndex + 1];
+                double[,] b = new double[Row_matrix2.SelectedIndex + 1, Column2.SelectedIndex + 1];
                 InitializeGrid(grid1, Column1.SelectedIndex + 1, Row1.SelectedIndex + 1);
-                InitializeGrid(grid2, Column2.SelectedIndex + 1, Column1.SelectedIndex + 1);
-                a = getValuesFromGrid(grid1);
-                b = getValuesFromGrid(grid2);
-                DisplayResult(grid3, Multiply(a, b));
+                InitializeGrid(grid2, Column2.SelectedIndex + 1, Row_matrix2.SelectedIndex + 1);
             }
             catch { return; }
 
@@ -47,15 +44,20 @@ namespace Matrix
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
+            
                 double[,] a = new double[Row1.SelectedIndex + 1, Column1.SelectedIndex + 1];
                 double[,] b = new double[Column1.SelectedIndex + 1, Column2.SelectedIndex + 1];
                 a = getValuesFromGrid(grid1);
                 b = getValuesFromGrid(grid2);
-                DisplayResult(grid3, Multiply(a, b));
+            try
+            {
+                double[,] c = Multiply(a, b);
+                DisplayResult(grid3, c);
             }
-            catch { return; }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
     }
 }

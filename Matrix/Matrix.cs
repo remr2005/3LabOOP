@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Matrix
-{
-    class Matrix
+
+    class MMatrix
     {
         public static double[,] Multiply(double[,] x, double[,] y)
         {
@@ -26,7 +26,8 @@ namespace Matrix
                 {
                     for (int k = 0; k < x.GetLength(1); k++) // столбцы матрицы x и строки матрицы y
                     {
-                        res[i, j] += x[i, k] * y[k, j]; // Правильное вычисление произведения
+                    if (x[i, k]<0 || y[k, i] < 0) { throw new ArgumentException("Some matrix have negative number"); }
+                    res[i, j] += x[i, k] * y[k, j]; // Правильное вычисление произведения
                     }
                 }
             }
@@ -34,4 +35,3 @@ namespace Matrix
             return res;
         }
     }
-}
